@@ -28,7 +28,8 @@ buffColumns = [
 	'will', 'wis', 'wis_skills',  'melee2', 'ranged2', 'cmb2','dmg_melee2','dmg_ranged2',
 	'kineticblast','dmg_kineticblast',
 	'customa1','customa2','customa3','customa4','customa5','customa6','customa7','customa8','customa9',
-	'customa10','customa11','customa12'	],
+	'customa10','customa11','customa12',
+	'app','app_skills'],
 //map of buffColumns to corresponding total field (buff_XYZ-total only XYZ portion)
 buffToTot = {
 	'ac':'AC',	'armor':'armor',	'attack':'attack',	'casterlevel':'CasterLevel',
@@ -46,7 +47,8 @@ buffToTot = {
 	'kineticblast':'kineticblast','dmg_kineticblast':'dmg_kineticblast',
 	'customa1':'customa1','customa2':'customa2','customa3':'customa3','customa4':'customa4',
 	'customa5':'customa5','customa6':'customa6','customa7':'customa7','customa8':'customa8',
-	'customa9':'customa9','customa10':'customa10','customa11':'customa11','customa12':'customa12'},
+	'customa9':'customa9','customa10':'customa10','customa11':'customa11','customa12':'customa12',
+	'app':'APP',	'app_skills':'APP_skills'},
 //only the total fields (buff_XYZ-total only XYZ portion) (no penalty fields)
 totColumns = _.values(buffToTot).concat(['dodge']).sort(),
 bonusTypes =['untyped','alchemical','circumstance','competence','enhancement','inherent',
@@ -61,12 +63,12 @@ var	armorcols=['armor','shield','natural'],
 buffsAffectingOthers = {
 	'ac':['cmd','touch','flatfooted'],
 	'attack':['melee','ranged','cmb','melee2','ranged2','cmb2'],
-	'check':['initiative','check_skills','check_ability','str_skills','dex_skills','con_skills','int_skills','wis_skills','cha_skills'],
+	'check':['initiative','check_skills','check_ability','str_skills','dex_skills','con_skills','int_skills','wis_skills','cha_skills','app_skills'],
 	'dmg':['dmg_melee','dmg_ranged','dmg_melee2','dmg_ranged2'],
 	'dmg_melee':['dmg_melee2'],
 	'dmg_ranged':['dmg_ranged2'],
 	'saves':['fort','ref','will'],
-	'check_skills':['str_skills','dex_skills','con_skills','int_skills','wis_skills','cha_skills']
+	'check_skills':['str_skills','dex_skills','con_skills','int_skills','wis_skills','cha_skills','app_skills']
 },
 //reverse map of buffsAffectingOthers, left is "child" buff, buff on right added to (and checked for stacking)
 affectedBuffs = {
@@ -94,7 +96,8 @@ affectedBuffs = {
 	'con_skills':['check_skills','check'],
 	'int_skills':['check_skills','check'],
 	'wis_skills':['check_skills','check'],
-	'cha_skills':['check_skills','check']
+	'cha_skills':['check_skills','check'],
+	'app_skills':['check_skills','check']
 },
 //all total fields plus "_exists", INCLUDING penalty fields
 buffTotFields = _.chain(totColumns).map(function(totstr){
@@ -113,6 +116,7 @@ otherCharBonuses ={
 	'int':{'inherent':'INT-inherent','enhancement':'INT-enhance'},
 	'wis':{'inherent':'WIS-inherent','enhancement':'WIS-enhance'},
 	'cha':{'inherent':'CHA-inherent','enhancement':'CHA-enhance'},
+	'app':{'inherent':'APP-inherent','enhancement':'APP-enhance'},
 	'initiative':{'trait':'init-trait'},
 	'fort':{'resistance':'Fort-resist','trait':'Fort-trait'},
 	'ref':{'resistance':'Ref-resist','trait':'Ref-trait'},
@@ -156,6 +160,7 @@ events = {
 		"INT_skills":[PFSkills.recalculateAbilityBasedSkills],
 		"WIS_skills":[PFSkills.recalculateAbilityBasedSkills],
 		"CHA_skills":[PFSkills.recalculateAbilityBasedSkills],
+		"APP_skills":[PFSkills.recalculateAbilityBasedSkills],
 		"Melee": [PFAttackGrid.updateAttackGrid],
 		"Ranged": [PFAttackGrid.updateAttackGrid],
 		"CMB": [PFAttackGrid.updateAttackGrid],
@@ -169,7 +174,8 @@ events = {
 		"CON": [PFAbilityScores.updateAbilityScore],
 		"INT": [PFAbilityScores.updateAbilityScore],
 		"WIS": [PFAbilityScores.updateAbilityScore],
-		"CHA": [PFAbilityScores.updateAbilityScore]
+		"CHA": [PFAbilityScores.updateAbilityScore],
+		"APP": [PFAbilityScores.updateAbilityScore]
 	},
 	buffEventsTotalOnUpdate :{
 		"buff_Check-total":[PFSkills.updateAllSkillsDiff],

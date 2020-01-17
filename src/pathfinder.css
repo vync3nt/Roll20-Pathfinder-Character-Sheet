@@ -100,6 +100,7 @@ h4,h5,h6 {
 .sheet-advanced-macro-show,
 .sheet-buff-exists,
 .sheet-condition-exists,
+.sheet-limb-exists,
 .sheet-horror-show,
 .sheet-section-state,
 .sheet-bg-show,
@@ -523,7 +524,8 @@ h1,h2,h3,h4,
 .sheet-parchment-1:checked ~ .sheet-pf-wrapper .sheet-table-row-name,
 .sheet-parchment-1:checked ~ .sheet-pf-wrapper .sheet-emphasize-field,
 .sheet-parchment-1:checked ~ .sheet-pf-wrapper .sheet-boldlabel-check:checked + b:not(.sheet-offCase),
-.sheet-parchment-1:checked ~ .sheet-pf-wrapper .sheet-condition-exists:checked + label {
+.sheet-parchment-1:checked ~ .sheet-pf-wrapper .sheet-condition-exists:checked + label,
+.sheet-parchment-1:checked ~ .sheet-pf-wrapper .sheet-limb-exists:checked + label {
 	background-color: #2f4f4f;
 }
 .sheet-parchment-1:checked ~ .sheet-pf-wrapper .sheet-table-header {
@@ -549,7 +551,8 @@ h1,h2,h3,h4,
 .sheet-parchment-2:checked ~ .sheet-pf-wrapper .sheet-table-row-name,
 .sheet-parchment-2:checked ~ .sheet-pf-wrapper .sheet-emphasize-field,
 .sheet-parchment-2:checked ~ .sheet-pf-wrapper .sheet-boldlabel-check:checked + b:not(.sheet-offCase),
-.sheet-parchment-2:checked ~ .sheet-pf-wrapper .sheet-condition-exists:checked + label {
+.sheet-parchment-2:checked ~ .sheet-pf-wrapper .sheet-condition-exists:checked + label,
+.sheet-parchment-2:checked ~ .sheet-pf-wrapper .sheet-limb-exists:checked + label {
 	background-color: #2f4f4f;
 }
 .sheet-parchment-2:checked ~ .sheet-pf-wrapper .sheet-table-header {
@@ -1500,6 +1503,7 @@ h2.sheet-clickheader {
 .sheet-showarrow.sheet-h2arrow,
 .sheet-showarrow.sheet-h3arrow,
 .sheet-showarrow.sheet-conditions-show,
+.sheet-showarrow.sheet-limbs-show,
 .sheet-showarrow.sheet-buffs-show {
     width: 20em;
     margin-right: -20em;
@@ -1967,6 +1971,7 @@ input.sheet-refreshbutton {
 .sheet-boldlabel-check + b:not(.sheet-offCase),
 .sheet-boldlabel-check + label b:not(.sheet-offCase),
 .sheet-condition-exists + label,
+.sheet-limb-exists + label,
 .sheet-status-panel label b {
     display: inline;
     font-size: 1.2rem;
@@ -1976,7 +1981,9 @@ input.sheet-refreshbutton {
 .sheet-boldlabel-check:checked + b:not(.sheet-offCase),
 .sheet-boldlabel-check:checked + label b:not(.sheet-offCase),
 .sheet-condition-exists.sheet-sect-either-show-n:checked ~ label,
-.sheet-condition-exists:checked + label {
+.sheet-condition-exists:checked + label,
+.sheet-limb-exists.sheet-sect-either-show-n:checked ~ label,
+.sheet-limb-exists:checked + label {
     background-color: #4a6486;
     color: White;
     border-radius: 0.5rem;
@@ -2006,7 +2013,8 @@ input.sheet-refreshbutton {
 .sheet-selectedlabel-check:checked + b:not(.sheet-offCase) {
     color: black;
 }
-.sheet-conditions {
+.sheet-conditions,
+.sheet-limbs {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
@@ -2015,12 +2023,14 @@ input.sheet-refreshbutton {
     padding-right: .25em;
 
 }
-.sheet-conditions .sheet-nontable-name {
+.sheet-conditions .sheet-nontable-name,
+.sheet-limbs .sheet-nontable-name {
     margin-left: -.25em;
     margin-right: -.25em;
     width: calc(100% + .5em);
 }
-.sheet-conditions .sheet-option-condition {
+.sheet-conditions .sheet-option-condition,
+.sheet-limbs .sheet-option-limb {
     white-space: nowrap;
     font-size: 1.2rem;
 }
@@ -2254,13 +2264,15 @@ button[type="roll"].sheet-blank-roll-button::before {
 }
 
 .sheet-options.sheet-table.sheet-named,
-.sheet-conditions.sheet-table {
+.sheet-conditions.sheet-table,
+.sheet-limbs.sheet-table {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
 .sheet-options.sheet-table.sheet-named .sheet-table-name,
 .sheet-table.sheet-named .sheet-table-name,
-.sheet-conditions .sheet-table-name {
+.sheet-conditions .sheet-table-name,
+.sheet-limbs .sheet-table-name {
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
 }
@@ -2761,7 +2773,8 @@ button[type="roll"].sheet-spellcaster-button {
 	display:inline-block;
 }
 .sheet-buffs,
-.sheet-conditions {
+.sheet-conditions,
+.sheet-limbs {
     border-style: solid;
     border-width: 0.2rem;
     border-radius: 0.5rem;
@@ -3217,6 +3230,9 @@ span.sheet-table-cell.sheet-linked-tablecell.sheet-extra-sect {
 .sheet-buff-exists:not(:checked) + label,
 .sheet-buff-exists:checked ~.sheet-panel-name,
 .sheet-buffs-show:not(:checked) ~ .sheet-buffs,
+.sheet-limb-exists:not(:checked) + label,
+.sheet-limb-exists:checked ~.sheet-panel-name,
+.sheet-limbs-show:not(:checked) ~ .sheet-limbs,
 /* spells per day section */
 .sheet-spellclass0-show:not(:checked) ~ .sheet-sect-spellclass0,
 .sheet-spellclass1-show:not(:checked) ~ .sheet-sect-spellclass1,
@@ -3272,7 +3288,8 @@ span.sheet-table-cell.sheet-linked-tablecell.sheet-extra-sect {
 .sheet-unchained-show:checked ~ .sheet-bg-show:checked ~ .sheet-tab2:checked ~ .sheet-skills .sheet-adventure:not(.sheet-bg) {
     display: none;
 }
-.sheet-condition-exists.sheet-sect-either-show-n:checked ~ label {
+.sheet-condition-exists.sheet-sect-either-show-n:checked ~ label,
+.sheet-limb-exists.sheet-sect-either-show-n:checked ~ label {
 	display:inline !important;
 }
 /* inventory subsections */

@@ -55,6 +55,7 @@ function expandAll  () {
 				npc_spellclass_tab: "99",
 				equipment_tab: "99",
 				'sheet-conditions-show':1,
+				'sheet-limbs-show':1,
 				'buffstop-show':1,
 				'command-buttons-show':1,
 				'NPC-command-buttons-show':1,

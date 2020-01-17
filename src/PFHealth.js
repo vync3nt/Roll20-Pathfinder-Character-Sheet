@@ -159,7 +159,7 @@ export function updateMaxHPLookup (callback, silently,eventInfo,forceReset) {
 	getAttrs(["HP", "HP_max", "HP-ability", "HP-ability-mod", "level", "total-hp", 
 		"total-mythic-hp", "condition-Drained", "HP-formula-mod", "HP-temp", "mythic-adventures-show", "wound_threshold-show", 
 		"condition-Wounds", "non-lethal-damage", "non-lethal-damage_max","condition-Staggered", "hp_ability_bonus",
-		"HP_grazed", "HP_wounded", "HP_critical", "HP_disabled","increase_hp"], 
+		"HP_grazed", "HP_wounded", "HP_critical", "HP_disabled","increase_hp",'Vigor','Vigor-max','Wounds','Wounds-max'], 
 		function (v) {
 		var abilityMod = 0,	abilityBonus =  0, currHPMax = 0, currHP =  0, tempHP =  0, newHP = 0,
 			increaseHPWhenMaxHPIncreases=0,
@@ -301,6 +301,141 @@ export function ensureNPCHPZero(callback){
 		}
 	});
 }
+
+
+//Wounds and Vigor bindings
+/** updateMaxVigorLookup
+ * sets max HP
+ * @param {function} callback when done
+ * @param {boolean} silently if T then call SWUtils.setWrapper with {silent:True}
+ * @param {boolean} forceReset recalculates max HP and sets HP to it.
+ * @param {object} eventInfo unused
+ */
+export function updateMaxVigorLookup (callback, silently,eventInfo,forceReset) {
+	console.log('lookup');
+	var done = _.once(function () {
+		//TAS.debug("leaving updateMaxHPLookup");
+		if (typeof callback === "function") {
+			callback();
+		}
+	});
+	getAttrs(["total-hp", "Vigor-formula-mod","increase_hp",'Vigor','Vigor_max'],function (v) {
+		var level = 0, miscMod = 0, currVigor = 0, maxVigor = 0, newCurrVigor = 0, newMaxVigor = 0,
+			increaseHPWhenMaxHPIncreases=0, setter={};
+		try {
+			increaseHPWhenMaxHPIncreases = parseInt(v.increase_hp,10)||0;
+			level = parseInt(v["total-hp"], 10) || 0;
+			currVigor = parseInt(v["Vigor"], 10) || 0;
+			maxVigor = parseInt(v["Vigor_max"], 10) || 0;
+			miscMod = parseInt(v["Vigor-formula-mod"], 10) || 0;
+
+			newCurrVigor = newCurrVigor;
+			newMaxVigor = level + miscMod;
+
+			if (forceReset)
+				newCurrVigor = newMaxVigor;
+			 else
+				newCurrVigor = currVigor + newMaxVigor - maxVigor;
+			
+			if (maxVigor !== newMaxVigor)
+				setter.vigor_max = newMaxVigor;
+
+			if (increaseHPWhenMaxHPIncreases && currVigor !== newCurrVigor){
+				setter.Vigor = newCurrVigor;
+			} else if (!increaseHPWhenMaxHPIncreases) {
+				newCurrVigor = currVigor;
+			}
+
+		} catch (err) {
+			TAS.error("PFHealth.updateMaxHPLookup", err);
+		} finally {
+			if (_.size(setter)>0){
+				SWUtils.setWrapper(setter, PFConst.silentParams, function(){
+					/*if (increaseHPWhenMaxHPIncreases && !(forceReset || currHPMax === newHPMax)){
+						updateCurrHP(newHP , tempHP, nonLethal, 0, v["HP-ability"], abilityMod, v["condition-Staggered"]);
+						if (usesWounds){
+							setWoundThreshholds(newHP + tempHP, newHPMax, currWoundLevel, abilityMod, v);
+						}
+					}*/
+					done();
+				});
+			} else {
+				done();
+			}
+		}
+	});
+}
+/** updateMaxWoundsLookup
+ * sets max HP
+ * @param {function} callback when done
+ * @param {boolean} silently if T then call SWUtils.setWrapper with {silent:True}
+ * @param {boolean} forceReset recalculates max HP and sets HP to it.
+ * @param {object} eventInfo unused
+ */
+export function updateMaxWoundsLookup (callback, silently,eventInfo,forceReset) {
+	var done = _.once(function () {
+		//TAS.debug("leaving updateMaxHPLookup");
+		if (typeof callback === "function") {
+			callback();
+		}
+	});
+	getAttrs(["HP-ability-base", "Wounds-formula-mod","increase_hp",'Wounds','Wounds_threshold','Wounds_max'],function (v) {
+		var abilityMod = 0, level = 0, miscMod = 0, currWounds = 0, maxWounds = 0, woundsThreshold = 0, newCurrWounds = 0, newMaxWounds = 0, newWoundsThreshold = 0,
+			increaseHPWhenMaxHPIncreases=0, setter={};
+		try {
+			increaseHPWhenMaxHPIncreases = parseInt(v.increase_hp,10)||0;
+			abilityMod = parseInt(v["HP-ability-base"], 10) || 0;
+			currWounds = parseInt(v["Wounds"], 10) || 0;
+			maxWounds = parseInt(v["Wounds_max"], 10) || 0;
+			miscMod = parseInt(v["Wounds-formula-mod"], 10) || 0;
+			woundsThreshold = parseInt(v["Wounds_threshold"], 10) || 0;
+			level = parseInt(v["level"], 10) || 0;
+			
+			newCurrWounds = currWounds;
+			newMaxWounds = (abilityMod * 2) + miscMod;
+			newWoundsThreshold = abilityMod;
+
+			if (forceReset)
+				newCurrWounds = newMaxWounds;
+			 else
+				newCurrWounds = currWounds + newMaxWounds - maxWounds;
+			
+			if (maxWounds !== newMaxWounds)
+				setter.Wounds_max = newMaxWounds;
+			
+			if (woundsThreshold !== newWoundsThreshold)
+				setter.Wounds_threshold = newWoundsThreshold;
+
+			if (increaseHPWhenMaxHPIncreases && currWounds !== newCurrWounds){
+				//setter.Wounds = Math.min(newCurrWounds,newMaxWounds);
+				setter.Wounds = newCurrWounds;
+			} else if (!increaseHPWhenMaxHPIncreases) {
+				newCurrWounds = currWounds;
+			}
+
+		} catch (err) {
+			TAS.error("PFHealth.updateMaxHPLookup", err);
+		} finally {
+			if (_.size(setter)>0){
+				SWUtils.setWrapper(setter, PFConst.silentParams, function(){
+					/*if (increaseHPWhenMaxHPIncreases && !(forceReset || currHPMax === newHPMax)){
+						updateCurrHP(newHP , tempHP, nonLethal, 0, v["HP-ability"], abilityMod, v["condition-Staggered"]);
+						if (usesWounds){
+							setWoundThreshholds(newHP + tempHP, newHPMax, currWoundLevel, abilityMod, v);
+						}
+					}*/
+					done();
+				});
+			} else {
+				done();
+			}
+		}
+	});
+
+}
+
+//Wounds and Vigor bindings/
+
 export function migrate (callback, oldversion){
 	var done = _.once(function(){
 		//TAS.debug("leaving PFHealth.migrate 2");
@@ -388,6 +523,32 @@ function registerEventHandlers () {
 		TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
 		if (eventInfo.sourceType === "player" || eventInfo.sourceType === "api") {
 			setWoundThreshholdsLookup(eventInfo);
+		}
+	}));
+
+	//Wounds and Vigor bindings
+	/*on("change:HP change:Vigor", TAS.callback(function eventUpdateWoundsCurr(eventInfo){
+		if (eventInfo.sourceType === "player" || eventInfo.sourceType === "api") {
+			TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
+			updateCurrVigorLookup(eventInfo);
+		}
+	}));*/
+	on("change:total-hp change:Vigor-formula-mod", TAS.callback(function eventUpdateVigor(eventInfo){
+		if (eventInfo.sourceType === "sheetworker" || eventInfo.sourceType === "api") {
+			TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
+			updateMaxVigorLookup(eventInfo);
+		}
+	}));
+	/*on("change:HP change:Wounds change:Vigor", TAS.callback(function eventUpdateWoundsCurr(eventInfo){
+		if (eventInfo.sourceType === "player" || eventInfo.sourceType === "api") {
+			TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
+			updateCurrWoundsLookup(eventInfo);
+		}
+	}));*/
+	on("change:HP-ability-base change:level change:Wounds-formula-mod", TAS.callback(function eventUpdateWounds(eventInfo){
+		if (eventInfo.sourceType === "sheetworker" || eventInfo.sourceType === "api") {
+			TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
+			updateMaxWoundsLookup(eventInfo);
 		}
 	}));
 }

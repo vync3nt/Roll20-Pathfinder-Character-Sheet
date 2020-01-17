@@ -14,6 +14,7 @@ export default {
 	//non repeating
 	abilityScoreManualDropdowns: {
 		"HP-ability": "HP-ability-mod",
+		"Wounds-ability": "Wound-ability-score",
 		"init-ability": "init-ability-mod",
 		"Fort-ability": "Fort-ability-mod",
 		"Ref-ability": "Ref-ability-mod",
@@ -41,6 +42,7 @@ export default {
 	],
 	manualDropdownDefaults: {
 		"HP-ability": "CON-mod",
+		"Wounds-ability": "CON-score",
 		"init-ability": "DEX-mod",
 		"Fort-ability": "CON-mod",
 		"Ref-ability": "DEX-mod",
@@ -79,6 +81,8 @@ export default {
 	equationMacros: {
 		"init-misc": "init-misc-mod",
 		"HP-formula-macro-text": "HP-formula-mod",
+		"Vigor-formula-macro-text": "Vigor-formula-mod",
+		"Wounds-formula-macro-text": "Wounds-formula-mod",
 		"Max-Skill-Ranks-Misc": "Max-Skill-Ranks-mod",
 		"SR-macro-text": "SR",
 		"spellclass-0-SP_misc": "spellclass-0-SP-mod",

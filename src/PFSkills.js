@@ -118,9 +118,9 @@ consolidatedSkillAbilityDefaults = {
 	"CS-Survival": "wis"
 },
 globalSkillModAttrs = ['enforce_requires_training', 'size_skill', 'size_skill_double', 'acp', 'Phys-skills-cond', 
-	'Perception-cond', 'STR-mod','DEX-mod','CON-mod','INT-mod','WIS-mod','CHA-mod',
+	'Perception-cond', 'STR-mod','DEX-mod','CON-mod','INT-mod','WIS-mod','CHA-mod','APP-mod',
 	'buff_STR_skills-total','buff_DEX_skills-total','buff_CON_skills-total',
-	'buff_INT_skills-total','buff_WIS_skills-total','buff_CHA_skills-total',
+	'buff_INT_skills-total','buff_WIS_skills-total','buff_CHA_skills-total','buff_APP_skills-total',
 	'checks-cond','buff_Check-total','buff_check_skills-total'],
 skillNameAppends = ['', '-cs', '-ranks', '-ability', '-racial', '-trait', '-feat', '-item', '-misc-mod', '-ReqTrain', '-ut'],
 //ability based skill buffs events located in PFBuffs
@@ -576,7 +576,7 @@ export function recalculateAbilityBasedSkills (abilityBuff,eventInfo,callback,si
 		if (tempstr==='physical'||tempstr==='acp'){
 			updatedAttr = /STR\-mod|DEX\-mod/;
 		} else {
-			matches=tempstr.match(/str|dex|con|int|wis|cha/i);
+			matches=tempstr.match(/str|dex|con|int|wis|cha|app/i);
 			if(matches){
 				//TAS.debug("recalculateAbilityBasedSkills the match is: "+matches[0],matches);
 				updatedAttr= new RegExp(matches[0].toUpperCase()+'\-mod');
@@ -1006,7 +1006,7 @@ export var recalculate = TAS.callback(function PFSkillsRecalculate(callback, sil
 	}, oldversion);
 });
 function registerEventHandlers () {
-	on("change:str-mod change:dex-mod change:con-mod change:int-mod change:wis-mod change:cha-mod",TAS.callback(function eventAbilityScoreToSkill(eventInfo){
+	on("change:str-mod change:dex-mod change:con-mod change:int-mod change:wis-mod change:cha-mod change:app-mod",TAS.callback(function eventAbilityScoreToSkill(eventInfo){
 		TAS.notice("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
 		if (eventInfo.sourceType === "sheetworker" || eventInfo.sourceType === "api") {
 			recalculateAbilityBasedSkills(null,eventInfo);

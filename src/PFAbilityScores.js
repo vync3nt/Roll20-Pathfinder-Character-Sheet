@@ -7,8 +7,8 @@ import PFConst from './PFConst';
 import * as PFUtils from './PFUtils';
 import * as PFAttacks from './PFAttacks';
 
-export var abilities = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
-export var abilitymods = ["STR-mod", "DEX-mod", "CON-mod", "INT-mod", "WIS-mod", "CHA-mod"];
+export var abilities = ["STR", "DEX", "CON", "INT", "WIS", "CHA", "APP"];
+export var abilitymods = ["STR-mod", "DEX-mod", "CON-mod", "INT-mod", "WIS-mod", "CHA-mod", "APP-mod"];
 var columnMods = [ "-base",  "-enhance",  "-inherent",  "-misc",  "-damage",  "-penalty",  "-drain",  "-mod",  "-cond",  "-modded"],
 columnBuffMods = [  "-total",  "-total_penalty"],
 columnModHelpers=[ "condition-Helpless", "condition-Paralyzed"],
