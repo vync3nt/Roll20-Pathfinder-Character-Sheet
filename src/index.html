@@ -13796,6 +13796,47 @@
 			</div>
 			<div class="sheet-section10 sheet-section sheet-section-notes" role="region" aria-label="Notes" data-i18n-aria-label="notes">
 				<h1 class="sheet-selected-tabtitle" data-i18n="notes">Notes</h1>
+
+				<div class="sheet-cheat"></div>
+				<input class="sheet-showarrow sheet-h2arrow" type="checkbox" name="attr_custom-attr-sect-n-show" data-i18n-aria-label="quick-stats" data-i18n-title="showsect-cmd"  value="1" checked />
+				<h2 class="sheet-clickheader sheet-showsect" data-i18n-title="showsect-cmd"  data-i18n-aria-label="showsect-cmd" data-i18n="contacts">Contacts</h2>
+				<div class="sheet-h2-section sheet-notes" role="section" >
+					<div class="sheet-sect sheet-repeating-fields sheet-table">
+						<fieldset class="repeating_contacts">
+							<span class="sheet-error"><span class="sheet-pictos">!</span><span data-i18n="error-msg1">Error! You must delete this row before editing any items in this section.</span></span>
+							<div class="sheet-table-repeating">
+								<input type="checkbox" class="sheet-counted sheet-sect-show" data-i18n-title="minimize-cmd" data-i18n-aria-label="minimize-cmd" title="Minimize Row" name="attr_row-show" value="1" checked /><span class="sheet-table-cell"></span>
+								<!-- <span style="display:none;" class="sheet-table-cell sheet-repeating-rollbutton"><button type="roll" name="attr_roll" title="%{selected|repeating_contact_$X_roll}" value="@{macro-text}"></button></span>
+								<span class="sheet-table-cell sheet-repeating-rollbutton"><button type="roll" name="attr_npc-roll" title="%{selected|repeating_contact_$X_npc-roll}" value="@{npc-macro-text}"></button></span> -->
+								<!-- <span class="sheet-table-cell sheet-small-label sheet-hide-readonly" style="width:2.5em;"><input type="checkbox" name="attr_showinmenu" title="@{repeating_contact_$X_showinmenu}" value="1" /><span data-i18n="show-in-menu" data-i18n-title="show-in-menu-title" data-i18n-aria-label="show-in-menu-title">Show</span></span> -->
+								
+								
+								<span class="sheet-table-cell sheet-small-label"><input title="@{repeating_contacts_$X_name}" type="text" name="attr_name" data-i18n-placeholder="contact-name"  accept="Name"><br><span data-i18n="name">Name</span></span>
+								<!-- <span class="sheet-table-cell sheet-small-label sheet-exspsu-dropdown">
+									<select title="@{repeating_racial-trait_$X_ability_type}" name="attr_ability_type">
+										<option value="not-applicable" data-i18n="not-applicable-abbrv-default" selected>&#8226;N/A</option>
+										<option value="Ex" data-i18n="exceptional-abbrv">Ex</option>
+										<option value="Sp" data-i18n="spell-like-abbrv" >Sp</option>
+										<option value="Su" data-i18n="supernatural-abbrv">Su</option>
+									</select>
+									<br>
+									<span data-i18n="type">Type</span>
+								</span> -->
+								<span class="sheet-table-cell sheet-small-label"><input title="@{repeating_contacts_$X_relation}" type="text" name="attr_relation" data-i18n-placeholder="contact-relation-score"><br><span data-i18n="contact-relation-score">Relation score</span></span>
+								<span class="sheet-table-cell sheet-small-label"><input title="@{repeating_contacts_$X_relation-level}" type="text" class="sheet-calc" readonly name="attr_relation-level" data-i18n-placeholder="contact-relation-level"><br><span data-i18n="contact-relation-level">Relation level</span></span>
+								<div class="sheet-sect sheet-expand">
+									<input type="checkbox" class="sheet-showarrow sheet-desc-show" data-i18n-title="showsect-cmd"  data-i18n-aria-label="showsect-cmd" aria-label="Show Description" name="attr_description-show" value="1" />
+									<label class="sheet-showsect sheet-desc-showlabel" data-i18n="notes">Notes</label>
+									<hr class="sheet-subnav-hr">
+									<div class="sheet-cheat"></div>
+									<textarea class="sheet-desc" title="@{repeating_contacts_$X_notes}" name="attr_notes" accept="Content"></textarea>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+
+
 				<div class="sheet-cheat"></div>
 				<input class="sheet-showarrow sheet-h2arrow" type="checkbox" name="attr_custom-attr-sect-n-show" data-i18n-aria-label="quick-stats" data-i18n-title="showsect-cmd"  value="1" checked />
 				<h2 class="sheet-clickheader sheet-showsect" data-i18n-title="showsect-cmd"  data-i18n-aria-label="showsect-cmd" data-i18n="notes">Notes</h2>

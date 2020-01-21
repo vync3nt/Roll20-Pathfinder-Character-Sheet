@@ -34,6 +34,7 @@ import * as PFConditions from './PFConditions';
 import * as PFHorror from './PFHorror';
 import * as PFOccult from './PFOccult';
 import * as PFMacros from './PFMacros';
+import * as PFNotes from './PFNotes';
 
 function expandAll  () {
 	getAttrs(["expandall"], function (v) {
