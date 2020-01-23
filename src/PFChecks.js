@@ -24,13 +24,23 @@ export function applyConditions (callback, silently) {
 		//,"condition-Fascinated" -4 to perception
 		var setter = {},
 		params = {}, drained = 0, fear = 0, sick = 0, woundPenalty = 0, wounds = 0, allSkillsMod = 0, casterlevel = 0, blindedMod = 0, currAllSkills = 0, currPhysSkills = 0, currPerSkills = 0, currCaster = 0,
-		skillNote='',initNote='',attackNote='',defenseNote='';
+		skillNote='',initNote='',attackNote='',defenseNote='',spooked = 0, scared = 0;
 		try {
 			drained = parseInt(v["condition-Drained"], 10) || 0;
-			fear = -1 * (parseInt(v["condition-Fear"], 10) || 0);
+			fear = (parseInt(v["condition-Fear"], 10) || 0);
 			sick = -1 * (parseInt(v["condition-Sickened"], 10) || 0);
 			woundPenalty = PFUtils.getWoundPenalty((parseInt(v["condition-Wounds"], 10) || 0), (parseInt(v.has_endurance_feat, 10) || 0), (parseInt(v.wounds_gritty_mode, 10) || 0));
 			wounds = (parseInt(v["wound_threshold-show"], 10) || 0) * woundPenalty;
+
+			if(fear === 1){
+				spooked = true;
+				fear = 0;
+			}else if(fear > 0){
+				if(fear === 3)
+					scared = true;
+				fear = -2;
+			}
+
 			allSkillsMod =  drained + fear + sick + wounds;
 			casterlevel = drained + wounds;
 			blindedMod = -2 * (parseInt(v["condition-Blinded"], 10) || 0);
@@ -65,6 +75,19 @@ export function applyConditions (callback, silently) {
 				skillNote+= '**'+SWUtils.getTranslated('fascinated')+'**: ';
 				skillNote+=SWUtils.getTranslated('condition-fascinated-title') + '\r\n';
 			}
+			if(spooked){
+				skillNote+= '**'+SWUtils.getTranslated('spooked')+'**: ';
+				skillNote+= SWUtils.getTranslated('condition-spooked-title') + '\r\n';
+				initNote+= SWUtils.getTranslated('spooked')+': ';
+				initNote+= SWUtils.getTranslated('condition-spooked-title') + '\r\n';
+				//savesNote+= SWUtils.getTranslated('spooked')+': ';
+				//savesNote+= SWUtils.getTranslated('condition-spooked-title') + '\r\n';
+			}
+			if(scared){
+				//savesNote+= SWUtils.getTranslated('scared')+': ';
+				//savesNote+= SWUtils.getTranslated('condition-scared-title') + '\r\n';
+			}
+			
 			if(skillNote!==v.condition_skill_notes){
 				setter['condition_skill_notes'] = skillNote;
 			}

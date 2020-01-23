@@ -620,6 +620,13 @@ export function getRowTotal  (fields, bonus, penalties, totalIsFloat, callback, 
 		penalty = 0,
 		i; //, setter = {}
 		try {
+			if(v['condition-Fear']){
+				if(v['condition-Fear'] > 1)
+					v['condition-Fear'] = 2;
+				else  
+					v['condition-Fear'] = 0;
+			}
+
 			//remember start at 1
 			for (i = 1; i < fields.length; i++) {
 				newValue += parseFloat(v[fields[i]]) || 0;
