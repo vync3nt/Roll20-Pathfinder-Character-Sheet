@@ -97,9 +97,9 @@ function setWoundThreshholds (hp, maxHP, currWoundLevel, abilityMod, v) {
  */
 export function setWoundThreshholdsLookup () {
 	//TAS.debug("at PFHealth.setWoundThreshholdsLookup");
-	getAttrs(["HP", "HP_max", "wound_threshold-show", "condition-Wounds", "HP-ability-mod","HP_grazed", "HP_wounded", "HP_critical", "HP_disabled"], function (v) {
+	getAttrs(["vigor", "vigor_max", "wound_threshold-show", "condition-Wounds", "HP-ability-mod","HP_grazed", "HP_wounded", "HP_critical", "HP_disabled"], function (v) {
 		if (parseInt(v["wound_threshold-show"],10)===1){
-			setWoundThreshholds(parseInt(v["HP"], 10) || 0, parseInt(v["HP_max"], 10) || 0, parseInt(v["condition-Wounds"], 10) || 0, parseInt(v["HP-ability-mod"], 10) || 0, v);
+			setWoundThreshholds(parseInt(v["vigor"], 10) || 0, parseInt(v["vigor_max"], 10) || 0, parseInt(v["condition-Wounds"], 10) || 0, parseInt(v["HP-ability-mod"], 10) || 0, v);
 		} else if ((parseInt(v["condition-Wounds"], 10) || 0) !== 0) {
 			SWUtils.setWrapper({
 				"condition-Wounds": "0"
@@ -157,58 +157,77 @@ export function updateMaxHPLookup (callback, silently,eventInfo,forceReset) {
 		}
 	});
 	getAttrs(["HP", "HP_max", "HP-ability", "HP-ability-mod", "level", "total-hp", 
-		"total-mythic-hp", "condition-Drained", "HP-formula-mod", "HP-temp", "mythic-adventures-show", "wound_threshold-show", 
-		"condition-Wounds", "non-lethal-damage", "non-lethal-damage_max","condition-Staggered", "hp_ability_bonus",
+		"total-mythic-hp", "condition-Drained", "HP-formula-mod", "mythic-adventures-show", "wound_threshold-show", 
+		"condition-Wounds","condition-Staggered", "hp_ability_bonus",
 		"HP_grazed", "HP_wounded", "HP_critical", "HP_disabled","increase_hp",'Vigor','Vigor-max','Wounds','Wounds-max'], 
 		function (v) {
-		var abilityMod = 0,	abilityBonus =  0, currHPMax = 0, currHP =  0, tempHP =  0, newHP = 0,
+		var abilityMod = 0,	abilityBonus =  0, currHPMax = 0, currHP =  0, newHP = 0, currVigor = 0, maxVigor = 0, currWounds = 0, maxWounds = 0,
 			increaseHPWhenMaxHPIncreases=0,
-			nonLethal = 0, newHPMax = 0, mythic = 0, currWoundLevel = 0, usesWounds = 0, setter={};
+			newHPMax = 0, mythic = 0, currWoundLevel = 0, usesWounds = 0, setter={};
 		try {
+
 			increaseHPWhenMaxHPIncreases = parseInt(v.increase_hp,10)||0;
-			abilityMod = parseInt(v["HP-ability-mod"], 10) || 0;
-			abilityBonus = (abilityMod * (parseInt(v["level"], 10) || 0));
 			currHPMax = parseInt(v["HP_max"], 10) || 0;
 			currHP = parseInt(v["HP"], 10) || 0;
-			tempHP = parseInt(v["HP-temp"], 10) || 0;
-			usesWounds= parseInt(v["wound_threshold-show"],10)||0;
-			newHP = currHP;
-			nonLethal = parseInt(v["non-lethal-damage"], 10) || 0;
-			mythic = parseInt(v["mythic-adventures-show"],10)||0;
-			//TAS.debug("at updateMaxHPLookup",v);
-			newHPMax = (abilityBonus + (parseInt(v["total-hp"], 10) || 0) + 
-				(parseInt(v["HP-formula-mod"], 10) || 0) + 
-				(5 * (parseInt(v["condition-Drained"], 10) || 0))) + 
-				(mythic ? (parseInt(v["total-mythic-hp"], 10) || 0) : 0);
-			if (usesWounds){
-				currWoundLevel = (parseInt(v["condition-Wounds"], 10) || 0);
-			}
+			currVigor = parseInt(v["Vigor"], 10) || 0;
+			maxVigor = parseInt(v["Vigor_max"], 10) || 0;
+			currWounds = parseInt(v["Wounds"], 10) || 0;
+			maxWounds = parseInt(v["Wounds_max"], 10) || 0;
+
+			newHP =  currVigor + currWounds;
+			newHPMax = maxVigor+ maxWounds;
+
 			if (forceReset ){
 				newHP = newHPMax;
-				if (nonLethal !== 0){
-					setter["non-lethal-damage"] = 0;
-					setter["condition-Staggered"] = 0;
-				}
 				if (usesWounds) {
 					setter["condition-Wounds"] = 0;
 				}
-			} else {
-				newHP = currHP + newHPMax - currHPMax;
+
 			}
-			if (abilityBonus !== parseInt(v.hp_ability_bonus,10)){
-				setter["hp_ability_bonus"] = abilityBonus;
-			}
-			if (increaseHPWhenMaxHPIncreases && newHP !== currHP){
-				setter.HP = newHP;
-			} else if (!increaseHPWhenMaxHPIncreases) {
-				newHP = currHP;
-			}
-			if (currHPMax !== newHPMax) {
-				setter.HP_max = newHPMax;
-			}
-			if (newHPMax !== parseInt(v["non-lethal-damage_max"],10)) {
-				setter["non-lethal-damage_max"] = newHPMax;
-			}
+			//
+			//abilityMod = parseInt(v["HP-ability-mod"], 10) || 0;
+			//abilityBonus = (abilityMod * (parseInt(v["level"], 10) || 0));
+			//tempHP = parseInt(v["HP-temp"], 10) || 0;
+			//currVigor = parseInt(v["Vigor"], 10) || 0;
+			//maxVigor = parseInt(v["Vigor_max"], 10) || 0;
+			//usesWounds= parseInt(v["wound_threshold-show"],10)||0;
+			//newHP = currHP;
+			//nonLethal = parseInt(v["non-lethal-damage"], 10) || 0;
+			//mythic = parseInt(v["mythic-adventures-show"],10)||0;
+			////TAS.debug("at updateMaxHPLookup",v);
+			//newHPMax = (abilityBonus + (parseInt(v["total-hp"], 10) || 0) + 
+			//	(parseInt(v["HP-formula-mod"], 10) || 0) + 
+			//	(5 * (parseInt(v["condition-Drained"], 10) || 0))) + 
+			//	(mythic ? (parseInt(v["total-mythic-hp"], 10) || 0) : 0);
+			//if (usesWounds){
+			//	currWoundLevel = (parseInt(v["condition-Wounds"], 10) || 0);
+			//}
+			//if (forceReset ){
+			//	newHP = newHPMax;
+			//	if (nonLethal !== 0){
+			//		setter["non-lethal-damage"] = 0;
+			//		setter["condition-Staggered"] = 0;
+			//	}
+			//	if (usesWounds) {
+			//		setter["condition-Wounds"] = 0;
+			//	}
+			//} else {
+			//	newHP = currHP + newHPMax - currHPMax;
+			//}
+			//if (abilityBonus !== parseInt(v.hp_ability_bonus,10)){
+			//	setter["hp_ability_bonus"] = abilityBonus;
+			//}
+			//if (increaseHPWhenMaxHPIncreases && newHP !== currHP){
+			//	setter.HP = newHP;
+			//} else if (!increaseHPWhenMaxHPIncreases) {
+			//	newHP = currHP;
+			//}
+			//if (currHPMax !== newHPMax) {
+			//	setter.HP_max = newHPMax;
+			//}
+			//if (newHPMax !== parseInt(v["non-lethal-damage_max"],10)) {
+			//	setter["non-lethal-damage_max"] = newHPMax;
+			//}
 		} catch (err) {
 			TAS.error("PFHealth.updateMaxHPLookup", err);
 		} finally {
@@ -304,6 +323,59 @@ export function ensureNPCHPZero(callback){
 
 
 //Wounds and Vigor bindings
+
+/** updateCurrVigor- when updating vigor, check wound threshold levels
+ * 
+ * @param {int} vigor 
+ * @param {boolean} usesWounds
+ */ 
+function updateCurrVigor (vigor, usesWounds) {
+	if (usesWounds) {
+		setWoundLevelLookup(vigor);
+	}
+}
+
+/** updateCurrHP- when updating hp, check nonLethalDmg level and wound threshold levels
+ * 
+ * @param {int} wounds 
+ * @param {int} woundsThreshold
+ * @param {string} woundsAbility value of hp dropdown 
+ * @param {boolean} staggered 
+ */ 
+function updateCurrWounds (wounds, woundsThreshold, woundsAbility, staggered) {
+	if (woundsAbility !== "0") {
+		if (woundsThreshold > wounds) {
+			SWUtils.setWrapper({
+				"condition-Staggered": "1"
+			},PFConst.silentParams);
+		} else if (staggered ) {
+			SWUtils.setWrapper({
+				"condition-Staggered": "0"
+			},PFConst.silentParams);
+		}
+	}
+}
+
+/* updateCurrVigorLookup - looks up data and calls updateCurrVigor */
+export function updateCurrVigorLookup () {
+	getAttrs(["vigor", "wound_threshold-show"], function (v) {
+		console.log(v)
+		//TAS.debug("PFHealth.updateCurrHPLookup",v);
+		updateCurrVigor(parseInt(v["vigor"],10 || 0), 
+			parseInt(v["wound_threshold-show"],10) || 0);
+	});
+}
+
+/* updateCurrWoundsLookup - looks up data and calls updateCurrWounds */
+export function updateCurrWoundsLookup () {
+	getAttrs(["wounds", "wounds_threshold", "condition-Staggered"], function (v) {
+		console.log(v)
+		//TAS.debug("PFHealth.updateCurrHPLookup",v);
+		updateCurrWounds(parseInt(v["wounds"],10 || 0), 
+			parseInt(v["wounds_threshold"],10) || 0,
+			parseInt(v["condition-Staggered"],10) || 0);
+	});
+}
 /** updateMaxVigorLookup
  * sets max HP
  * @param {function} callback when done
@@ -312,7 +384,6 @@ export function ensureNPCHPZero(callback){
  * @param {object} eventInfo unused
  */
 export function updateMaxVigorLookup (callback, silently,eventInfo,forceReset) {
-	console.log('lookup');
 	var done = _.once(function () {
 		//TAS.debug("leaving updateMaxHPLookup");
 		if (typeof callback === "function") {
@@ -527,24 +598,24 @@ function registerEventHandlers () {
 	}));
 
 	//Wounds and Vigor bindings
-	/*on("change:HP change:Vigor", TAS.callback(function eventUpdateWoundsCurr(eventInfo){
+	on("change:Vigor", TAS.callback(function eventUpdateVigorCurr(eventInfo){
 		if (eventInfo.sourceType === "player" || eventInfo.sourceType === "api") {
 			TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
 			updateCurrVigorLookup(eventInfo);
 		}
-	}));*/
+	}));
 	on("change:total-hp change:Vigor-formula-mod", TAS.callback(function eventUpdateVigor(eventInfo){
 		if (eventInfo.sourceType === "sheetworker" || eventInfo.sourceType === "api") {
 			TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
 			updateMaxVigorLookup(eventInfo);
 		}
 	}));
-	/*on("change:HP change:Wounds change:Vigor", TAS.callback(function eventUpdateWoundsCurr(eventInfo){
+	on("change:Wounds", TAS.callback(function eventUpdateWoundsCurr(eventInfo){
 		if (eventInfo.sourceType === "player" || eventInfo.sourceType === "api") {
 			TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
 			updateCurrWoundsLookup(eventInfo);
 		}
-	}));*/
+	}));
 	on("change:HP-ability-base change:level change:Wounds-formula-mod", TAS.callback(function eventUpdateWounds(eventInfo){
 		if (eventInfo.sourceType === "sheetworker" || eventInfo.sourceType === "api") {
 			TAS.debug("caught " + eventInfo.sourceAttribute + " event: " + eventInfo.sourceType);
